@@ -1,3 +1,3 @@
-import Home from "@/features/home";
+import Home from "@/features/todo/components/Home";
 
 export default Home;
