@@ -1,5 +1,6 @@
 import React from "react";
-import { Checkbox, Typography, Paper, Grid } from "@mui/material";
+import { Checkbox, Typography, Paper, Grid, IconButton } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface Props {
   id: number;
@@ -10,18 +11,10 @@ interface Props {
   completedAt?: string;
   createdAt: string;
   completeTodo: (id: number) => void;
+  deleteTodo: (id: number) => void;
 }
 
-export const Todo: React.FC<Props> = ({
-  id,
-  title,
-  description,
-  dueDate,
-  completed,
-  completedAt,
-  createdAt,
-  completeTodo,
-}) => {
+export const Todo: React.FC<Props> = (props) => {
   return (
     <Paper
       elevation={3}
@@ -29,7 +22,7 @@ export const Todo: React.FC<Props> = ({
         cursor: "pointer",
         padding: 2,
         borderBottom: "1px solid #ccc",
-        ...(completed && {
+        ...(props.completed && {
           textDecoration: "line-through",
           opacity: 0.7,
         }),
@@ -39,7 +32,7 @@ export const Todo: React.FC<Props> = ({
       <Grid container spacing={1}>
         <Grid item container xs={12}>
           <Grid item xs={6} sm={9}>
-            <Typography variant="h6">{title}</Typography>
+            <Typography variant="h6">{props.title}</Typography>
           </Grid>
           <Grid
             item
@@ -52,27 +45,45 @@ export const Todo: React.FC<Props> = ({
             }}
           >
             <Checkbox
-              checked={completed}
-              disabled={completed}
+              checked={props.completed}
+              disabled={props.completed}
               color="primary"
-              onClick={() => completeTodo(id)}
+              onClick={() => props.completeTodo(props.id)}
             />
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <Typography variant="body1">{description}</Typography>
+          <Typography variant="body1">{props.description}</Typography>
         </Grid>
         <Grid item xs={6} sm={3}>
           <Typography variant="caption">Created At:</Typography>
-          <Typography variant="body2">{createdAt}</Typography>
+          <Typography variant="body2">{props.createdAt}</Typography>
         </Grid>
         <Grid item xs={6} sm={3}>
           <Typography variant="caption">Due Date:</Typography>
-          <Typography variant="body2">{dueDate}</Typography>
+          <Typography variant="body2">{props.dueDate}</Typography>
         </Grid>
         <Grid item xs={6} sm={3}>
           <Typography variant="caption">Completed At:</Typography>
-          <Typography variant="body2">{completedAt || ""}</Typography>
+          <Typography variant="body2">{props.completedAt || ""}</Typography>
+        </Grid>
+        <Grid
+          item
+          xs={6}
+          sm={3}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "end",
+          }}
+        >
+          <IconButton onClick={() => props.deleteTodo(props.id)}>
+            <DeleteIcon
+              sx={{
+                color: "red",
+              }}
+            />
+          </IconButton>
         </Grid>
       </Grid>
     </Paper>
