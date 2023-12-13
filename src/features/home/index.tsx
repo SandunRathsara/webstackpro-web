@@ -92,7 +92,11 @@ const styles: Styles = {
     display: "flex",
     justifyContent: "space-between",
     width: "100%",
-    padding: "1rem",
+    paddingY: "0.5rem",
+    paddingX: "1rem",
+    position: "sticky",
+    top: 0,
+    zIndex: 1,
   },
 };
 

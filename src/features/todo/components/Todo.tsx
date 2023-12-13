@@ -64,7 +64,9 @@ export const Todo: React.FC<Props> = (props) => {
           <Typography variant="body2">{props.dueDate}</Typography>
         </Grid>
         <Grid item xs={6} sm={3}>
-          <Typography variant="caption">Completed At:</Typography>
+          <Typography variant="caption">
+            {props.completed ? "Completed At:" : "Not Completed"}
+          </Typography>
           <Typography variant="body2">{props.completedAt || ""}</Typography>
         </Grid>
         <Grid
