@@ -4,9 +4,9 @@ import KeycloakProvider from "next-auth/providers/keycloak";
 export default NextAuth({
   providers: [
     KeycloakProvider({
-      clientId: "backend-client",
-      clientSecret: "8FtrtH8SSGrIAr6DSFoZdySX10qYOvNU",
-      issuer: "http://localhost:8080/realms/webstackpro",
+      clientId: `${process.env.KEYCLOAK_CLIENT_ID}`,
+      clientSecret: `${process.env.KEYCLOAK_CLIENT_SECRET}`,
+      issuer: `${process.env.NEXT_PUBLIC_KEYCLOAK_URL}/realms/${process.env.NEXT_PUBLIC_KEYCLOAK_REALM}`,
     }),
   ],
   callbacks: {

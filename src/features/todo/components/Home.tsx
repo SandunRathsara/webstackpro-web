@@ -1,5 +1,15 @@
-import { FC, useState } from "react";
-import { Box, Button, SxProps, Theme, IconButton, Paper } from "@mui/material";
+import { FC, useState, MouseEvent } from "react";
+import {
+  Box,
+  Button,
+  SxProps,
+  Theme,
+  IconButton,
+  Paper,
+  Typography,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import {
   useCompleteTodoMutation,
   useDeleteTodoMutation,
@@ -11,8 +21,12 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import AddIcon from "@mui/icons-material/Add";
 import AddTodo from "@/features/todo/components/AddTodo";
+import { signOut, useSession } from "next-auth/react";
+import { keycloakLogout } from "@/util/auth/keycloakLogout";
 
 const Home: FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { data, isLoading } = useGetAllTodosQuery({});
   const [completeTodo] = useCompleteTodoMutation();
   const [deleteTodo] = useDeleteTodoMutation();
@@ -22,6 +36,13 @@ const Home: FC = () => {
   const [showAddNewTodoModal, setShowAddNewTodoModal] =
     useState<boolean>(false);
 
+  const { data: session } = useSession();
+
+  const openMenu = (event: MouseEvent<HTMLDivElement>) => {
+    setAnchorEl(event.currentTarget);
+    setIsMenuOpen(true);
+  };
+
   return (
     <>
       <Box sx={styles.container}>
@@ -30,12 +51,40 @@ const Home: FC = () => {
             <IconButton onClick={toggleMode}>
               {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
             </IconButton>
-            <Button
-              startIcon={<AddIcon />}
-              onClick={() => setShowAddNewTodoModal(true)}
-            >
-              Add New
-            </Button>
+            <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+              <Button
+                startIcon={<AddIcon />}
+                onClick={() => setShowAddNewTodoModal(true)}
+              >
+                Add New
+              </Button>
+              <Box
+                sx={{ height: "2.2rem" }}
+                component={"img"}
+                src={`https://api.dicebear.com/7.x/micah/svg?seed=${session?.user?.name}&&facialHair[]`}
+              />
+              <Box sx={{ cursor: "pointer" }} onClick={openMenu}>
+                <Typography>{session?.user?.name}</Typography>
+                <Typography>{session?.user?.email}</Typography>
+              </Box>
+              <Menu
+                anchorEl={anchorEl}
+                open={isMenuOpen}
+                onClose={() => {
+                  setAnchorEl(null);
+                  setIsMenuOpen(false);
+                }}
+              >
+                <MenuItem
+                  onClick={() => {
+                    signOut();
+                    keycloakLogout(session?.token.idToken || "");
+                  }}
+                >
+                  Logout
+                </MenuItem>
+              </Menu>
+            </Box>
           </Paper>
           {isLoading
             ? "Loading..."
