@@ -5,9 +5,8 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const { data } = useSession();
 
   if (data === null) signIn("keycloak");
-  else {
-    return children;
-  }
+
+  else return children;
 };
 
 export default AuthProvider;
